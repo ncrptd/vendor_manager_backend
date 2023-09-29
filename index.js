@@ -11,7 +11,7 @@ const routeNotFound = require('./src/middlewares/route-not-found.middleware');
 app.use(express.json());
 initializeDatabase();
 app.use(cors());
-app.user(helmet())
+app.use(helmet())
 app.get('/', (req, res) => {
     res.send('Hello, world')
 });
