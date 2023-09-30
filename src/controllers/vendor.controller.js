@@ -19,8 +19,17 @@ const createVendor = async (req, res) => {
 
 const getVendors = async (req, res) => {
     try {
-        const vendors = await Vendor.find({});
-        return res.json({ data: vendors, success: true })
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.perPage) || 5;
+        const vendors = await Vendor.find({}).skip((page - 1) * limit).limit(limit).exec();
+        const totalVendors = await Vendor.countDocuments();
+        const totalPages = Math.ceil(totalVendors / limit);
+        res.json({
+            data: vendors,
+            currentPage: page,
+            totalPages,
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ errorMessage: 'Error while retrieving ', error, success: false })
