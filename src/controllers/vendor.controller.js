@@ -8,7 +8,14 @@ const createVendor = async (req, res) => {
         }
         const newVendor = new Vendor(vendorDetails);
         const savedVendor = await newVendor.save();
-        res.status(201).json({ message: 'Vendor created successfully', data: savedVendor, success: true })
+        const vendors = await Vendor.find({}).limit(10).sort({ _id: -1 }).exec();
+        const totalVendors = await Vendor.countDocuments();
+        const totalPages = Math.ceil(totalVendors / 10);
+        res.status(201).json({
+            message: 'Vendor created successfully', vendors, vendors,
+            currentPage: 1,
+            totalPages, success: true
+        })
     } catch (error) {
         console.error(error);
         res.status(500).json({ errorMessage: 'Error while creating vendor', error, success: false })
@@ -21,7 +28,7 @@ const getVendors = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.perPage) || 10;
-        const vendors = await Vendor.find({}).skip((page - 1) * limit).limit(limit).exec();
+        const vendors = await Vendor.find({}).skip((page - 1) * limit).limit(limit).sort({ _id: -1 }).exec();
         const totalVendors = await Vendor.countDocuments();
         const totalPages = Math.ceil(totalVendors / limit);
         res.json({
