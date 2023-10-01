@@ -25,7 +25,7 @@ const getVendors = async (req, res) => {
         const totalVendors = await Vendor.countDocuments();
         const totalPages = Math.ceil(totalVendors / limit);
         res.json({
-            data: vendors,
+            vendors,
             currentPage: page,
             totalPages,
         });
