@@ -20,7 +20,7 @@ const createVendor = async (req, res) => {
 const getVendors = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.perPage) || 5;
+        const limit = parseInt(req.query.perPage) || 10;
         const vendors = await Vendor.find({}).skip((page - 1) * limit).limit(limit).exec();
         const totalVendors = await Vendor.countDocuments();
         const totalPages = Math.ceil(totalVendors / limit);
